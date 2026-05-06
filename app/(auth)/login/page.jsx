@@ -58,13 +58,21 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true)
     try {
-      await signIn('google', { 
-        callbackUrl: '/my-profile',
-        redirect: true
+      const callbackUrl = `${window.location.origin}/my-profile`
+      const result = await signIn('google', {
+        callbackUrl,
+        redirect: false
       })
+
+      if (result?.url) {
+        router.push(result.url)
+      } else {
+        toast.error('Google login failed. Please try again.')
+      }
     } catch (error) {
       console.error('Google login error:', error)
       toast.error('Google login failed.')
+    } finally {
       setLoading(false)
     }
   }

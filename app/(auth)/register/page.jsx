@@ -64,15 +64,21 @@ export default function RegisterPage() {
   const handleGoogleRegister = async () => {
     setLoading(true)
     try {
-      // Use redirect: true to let NextAuth handle the redirect automatically
-      // This ensures the session is established before navigation
-      await signIn('google', { 
-        callbackUrl: '/my-profile',
-        redirect: true
+      const callbackUrl = `${window.location.origin}/my-profile`
+      const result = await signIn('google', {
+        callbackUrl,
+        redirect: false
       })
+
+      if (result?.url) {
+        router.push(result.url)
+      } else {
+        toast.error('Google registration failed. Please try again.')
+      }
     } catch (error) {
       console.error('Google registration error:', error)
       toast.error('Google registration failed.')
+    } finally {
       setLoading(false)
     }
   }

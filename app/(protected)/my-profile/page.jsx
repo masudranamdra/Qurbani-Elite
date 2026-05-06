@@ -1,6 +1,7 @@
 ﻿'use client'
 
 import { useAuth } from '@/lib/auth-context'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -29,17 +30,24 @@ import LoadingSpinner from '@/components/shared/LoadingSpinner'
 import { formatPrice } from '@/lib/utils'
 
 export default function MyProfilePage() {
-  const { user, loading, logout } = useAuth()
   const router = useRouter()
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/login')
+    }
+  })
+  const { user, loading, logout } = useAuth()
   const [bookings, setBookings] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [cancelingOrder, setCancelingOrder] = useState(null)
+  const sessionLoading = status === 'loading'
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!sessionLoading && !loading && !user) {
       router.push('/login')
     }
-  }, [user, loading, router])
+  }, [user, loading, sessionLoading, router])
 
   useEffect(() => {
     let mounted = true
@@ -108,7 +116,7 @@ export default function MyProfilePage() {
     }
   }
 
-  if (loading || !user) {
+  if (sessionLoading || loading || !user) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-6">
         <LoadingSpinner />
