@@ -65,20 +65,13 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       const callbackUrl = `${window.location.origin}/my-profile`
-      const result = await signIn('google', {
+      await signIn('google', {
         callbackUrl,
-        redirect: false
+        redirect: true
       })
-
-      if (result?.url) {
-        router.push(result.url)
-      } else {
-        toast.error('Google registration failed. Please try again.')
-      }
     } catch (error) {
       console.error('Google registration error:', error)
-      toast.error('Google registration failed.')
-    } finally {
+      toast.error('Google registration failed. Please try again.')
       setLoading(false)
     }
   }

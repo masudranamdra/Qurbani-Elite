@@ -111,16 +111,10 @@ function AuthProviderInner({ children }) {
   const loginWithGoogle = async (callbackUrl = `${window.location.origin}/my-profile`) => {
     setLoading(true)
     try {
-      const result = await signIn('google', {
+      await signIn('google', {
         callbackUrl,
-        redirect: false
+        redirect: true
       })
-
-      if (result?.url) {
-        window.location.href = result.url
-      } else {
-        throw new Error('Google login failed')
-      }
     } catch (error) {
       console.error('Google login error:', error)
       throw error
