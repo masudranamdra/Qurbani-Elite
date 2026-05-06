@@ -1,16 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Mail, Lock, User, Phone, UserPlus, PawPrint, ArrowLeft } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LoadingSpinner from '@/components/shared/LoadingSpinner'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const { register } = useAuth()
 
   const [formData, setFormData] = useState({
@@ -20,6 +22,20 @@ export default function RegisterPage() {
     password: ''
   })
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/my-profile')
+    }
+  }, [status, router])
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 py-20">
+        <LoadingSpinner />
+      </div>
+    )
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()

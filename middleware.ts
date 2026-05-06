@@ -1,21 +1,6 @@
+import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-const PUBLIC_PATHS = [
-  '/login',
-  '/register',
-  '/',
-  '/about',
-  '/animals',
-  '/animals/',
-  '/api/auth',
-  '/api/auth/',
-  '/api/auth/signin',
-  '/api/auth/signout',
-  '/api/auth/callback',
-  '/api/auth/session',
-  '/api/auth/csrf'
-]
 
 const PUBLIC_FILE = /\.(.*)$/
 
@@ -24,26 +9,37 @@ function isPublicPath(pathname: string) {
     return true
   }
 
-  if (pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico')) {
+  if (pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico') || pathname.startsWith('/static')) {
     return true
   }
 
-  return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path))
+  if (pathname === '/' || pathname === '/login' || pathname === '/register' || pathname === '/about') {
+    return true
+  }
+
+  if (pathname.startsWith('/animals')) {
+    return true
+  }
+
+  return pathname.startsWith('/api/auth')
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (isPublicPath(pathname)) {
     return NextResponse.next()
   }
 
-  const cookieValue =
-    request.cookies.get('__Secure-next-auth.session-token')?.value ||
-    request.cookies.get('next-auth.session-token')?.value
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === 'production'
+  })
 
-  if (!cookieValue) {
-    const loginUrl = new URL('/login', request.url)
+  if (!token) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
@@ -52,5 +48,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next|.*\\..*).*)']
+  matcher: ['/((?!_next|api|.*\\..*).*)']
 }

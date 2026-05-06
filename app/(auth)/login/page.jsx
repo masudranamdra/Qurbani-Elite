@@ -2,18 +2,26 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Mail, Lock, LogIn, PawPrint, ArrowLeft } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LoadingSpinner from '@/components/shared/LoadingSpinner'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [redirect, setRedirect] = useState('/my-profile')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/my-profile')
+    }
+  }, [status, router])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -21,6 +29,14 @@ export default function LoginPage() {
       setRedirect(params.get('redirect') || '/my-profile')
     }, 0)
   }, [])
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-[90vh] flex items-center justify-center px-4 py-20">
+        <LoadingSpinner />
+      </div>
+    )
+  }
 
 
   const handleSubmit = async (e) => {

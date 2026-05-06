@@ -31,23 +31,19 @@ import { formatPrice } from '@/lib/utils'
 
 export default function MyProfilePage() {
   const router = useRouter()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/login')
-    }
-  })
+  const { data: session, status } = useSession()
   const { user, loading, logout } = useAuth()
   const [bookings, setBookings] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [cancelingOrder, setCancelingOrder] = useState(null)
   const sessionLoading = status === 'loading'
+  const isLoading = sessionLoading || loading
 
   useEffect(() => {
-    if (!sessionLoading && !loading && !user) {
+    if (status === 'unauthenticated') {
       router.push('/login')
     }
-  }, [user, loading, sessionLoading, router])
+  }, [status, router])
 
   useEffect(() => {
     let mounted = true
@@ -116,7 +112,7 @@ export default function MyProfilePage() {
     }
   }
 
-  if (sessionLoading || loading || !user) {
+  if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-6">
         <LoadingSpinner />
@@ -124,12 +120,14 @@ export default function MyProfilePage() {
     )
   }
 
+  const profile = user || session?.user || {}
+
   const profileFields = [
-    { icon: User, label: 'Legal Name', value: user.name },
-    { icon: Mail, label: 'Communication', value: user.gmail || user.email },
-    { icon: Phone, label: 'Secure Line', value: user.phone || 'Not provided' },
-    { icon: MapPin, label: 'Elite Location', value: user.address || 'Not provided' },
-    { icon: Home, label: 'Mansion / Home', value: user.home || 'Not provided' },
+    { icon: User, label: 'Legal Name', value: profile.name || 'Unknown' },
+    { icon: Mail, label: 'Communication', value: profile.gmail || profile.email || 'Not provided' },
+    { icon: Phone, label: 'Secure Line', value: profile.phone || 'Not provided' },
+    { icon: MapPin, label: 'Elite Location', value: profile.address || 'Not provided' },
+    { icon: Home, label: 'Mansion / Home', value: profile.home || 'Not provided' },
   ]
 
   const activeBookings = bookings.filter((booking) => booking.status !== 'Cancelled').length
