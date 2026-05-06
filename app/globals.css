@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #059669;
+  --color-primary-hover: #047857;
+  --color-primary-dark: #064e3b;
+  
+  --color-secondary: #020617;
+  --color-secondary-hover: #0f172a;
+  
+  --color-accent: #d97706;
+  
+  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --background: #f7fafc;
+  --foreground: #020617;
+  --surface: #f8fafc;
+  --surface-strong: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #020617;
+  --border: #e2e8f0;
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+  --muted: #64748b;
+  --muted-foreground: #64748b;
+  --accent: #f8fafc;
+  --accent-foreground: #020617;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --ring: #059669;
+  --radius: 1.5rem;
+}
+
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --surface: #0f172a;
+  --surface-strong: #111827;
+  --card: #111827;
+  --card-foreground: #f8fafc;
+  --border: #1f2937;
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+  --muted: #94a3b8;
+  --muted-foreground: #94a3b8;
+  --accent: #111827;
+  --accent-foreground: #f8fafc;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --ring: #059669;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: radial-gradient(circle at top left, rgba(5,150,105,0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(251,191,36,0.08), transparent 24%), var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
+}
+
+button, input, textarea, select {
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Custom Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+

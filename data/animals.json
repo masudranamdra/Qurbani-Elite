@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1",
+    "name": "King Sultan",
+    "type": "Cow",
+    "breed": "Brahman",
+    "price": 350000,
+    "weight": 850,
+    "age": "3 years",
+    "location": "Pabna, Bangladesh",
+    "description": "King Sultan is a magnificent Brahman bull with exceptional health and weight. Perfect for a grand Qurbani.",
+    "image": "https://i.ibb.co.com/RkxGFzTC/gilles-detot-g-Ueb-Civ-JHjc-unsplash.jpg",
+    "category": "Premium"
+  },
+  {
+    "id": "2",
+    "name": "White Beauty",
+    "type": "Cow",
+    "breed": "Sahiwal",
+    "price": 180000,
+    "weight": 450,
+    "age": "2.5 years",
+    "location": "Sirajganj, Bangladesh",
+    "description": "A beautiful Sahiwal cow with a white coat. Healthy and well-fed on organic grass.",
+    "image": "https://i.ibb.co.com/RThNHxMn/screenroad-Fqu-Dp5-N1-Gw0-unsplash-1.jpg",
+    "category": "Standard"
+  },
+  {
+    "id": "3",
+    "name": "Black Mountain",
+    "type": "Goat",
+    "breed": "Black Bengal",
+    "price": 35000,
+    "weight": 45,
+    "age": "1.5 years",
+    "location": "Kushtia, Bangladesh",
+    "description": "High-quality Black Bengal goat. Known for its delicious meat and sturdy build.",
+    "image": "https://i.ibb.co.com/23fYdq0g/jonathan-ardila-YBwd-Raar9-KQ-unsplash.jpg",
+    "category": "Economy"
+  },
+  {
+    "id": "4",
+    "name": "Red Giant",
+    "type": "Cow",
+    "breed": "Sindhi",
+    "price": 220000,
+    "weight": 550,
+    "age": "2.8 years",
+    "location": "Jessore, Bangladesh",
+    "description": "A powerful Red Sindhi bull. Strong, healthy, and ready for sacrifice.",
+    "image": "https://i.ibb.co.com/wrKpL13j/niels-and-marco-j-Fpnb-Gooysc-unsplash.jpg",
+    "category": "Standard"
+  },
+  {
+    "id": "5",
+    "name": "Snowy",
+    "type": "Goat",
+    "breed": "Jamunapari",
+    "price": 55000,
+    "weight": 65,
+    "age": "2 years",
+    "location": "Rajshahi, Bangladesh",
+    "description": "Elegant Jamunapari goat with a pure white coat and long ears. Very well-behaved.",
+    "image": "https://i.ibb.co.com/RpbM0R57/nandhu-kumar-j-AMc-Ubs-Tv-WE-unsplash.jpg",
+    "category": "Premium"
+  },
+  {
+    "id": "6",
+    "name": "Thunder",
+    "type": "Cow",
+    "breed": "Holstein Friesian",
+    "price": 280000,
+    "weight": 700,
+    "age": "3.2 years",
+    "location": "Dhaka, Bangladesh",
+    "description": "A massive Holstein Friesian cow. Excellent health profile and impressive presence.",
+    "image": "https://i.ibb.co.com/Kphgktmt/andrey-camara-U-cc6ac5chg-unsplash.jpg",
+    "category": "Standard"
+  }
+]

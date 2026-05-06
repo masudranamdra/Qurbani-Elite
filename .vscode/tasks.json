@@ -1,0 +1,78 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Validate Next Build",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate Next Build",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Inspect Lucide Exports",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-p",
+				"Object.keys(require('lucide-react')).filter(k=>/(Facebook|Instagram|Twitter|Globe|Chrome|PawPrint|ArrowRight)/.test(k)).join('\\n')"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Show Lucide Exports",
+			"type": "shell",
+			"command": "node temp-lucide-exports.mjs",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Show Brand Icons",
+			"type": "shell",
+			"command": "node temp-lucide-exports.mjs",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Show Generic Icons",
+			"type": "shell",
+			"command": "node temp-lucide-exports.mjs",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Validate Next Build",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Validate Next Build",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Clean Temp File",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"Remove-Item -LiteralPath 'temp-lucide-exports.mjs' -ErrorAction SilentlyContinue"
+			],
+			"isBackground": false
+		}
+	]
+}
