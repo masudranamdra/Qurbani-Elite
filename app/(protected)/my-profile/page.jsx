@@ -140,9 +140,9 @@ export default function MyProfilePage() {
         className="glass rounded-[56px] overflow-hidden border border-border/80 shadow-3xl shadow-primary/10"
       >
         <section className="relative bg-slate-950/5 dark:bg-slate-950">
-          <div className="relative h-96">
+          <div className="relative h-150">
             <Image
-              src={user.coverURL || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?q=80&w=1200'}
+              src={'https://i.ibb.co.com/95v6dB3/leon-ephraim-Axo-Nnn-H1-Y98-unsplash.jpg'||user.coverURL}
               alt="Cover image"
               fill
               className="object-cover"
@@ -152,7 +152,7 @@ export default function MyProfilePage() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(5,150,105,0.16),_transparent_24%)]" />
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 px-6 md:px-12 pb-8">
+          <div className="absolute inset-x-0 bottom-0 px-6 md:px-12 pb-10">
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 rounded-[40px] bg-gradient-to-br from-sky-50/1 via-blue-100/1 to-green-100/20 border border-white/10 p-8 shadow-2xl shadow-slate-950/20 backdrop-blur-md">
               <div className="flex items-center gap-6">
                 <div className="relative w-40 h-40 rounded-[32px] border-8 border-slate-950/90 overflow-hidden shadow-2xl bg-card">
