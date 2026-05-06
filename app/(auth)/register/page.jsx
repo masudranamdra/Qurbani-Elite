@@ -37,6 +37,15 @@ export default function RegisterPage() {
     )
   }
 
+  // Don't render register form if user is authenticated
+  if (status === 'authenticated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 py-20">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.name || !formData.email || !formData.password) {

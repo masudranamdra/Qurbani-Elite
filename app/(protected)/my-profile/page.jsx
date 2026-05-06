@@ -40,10 +40,13 @@ export default function MyProfilePage() {
   const isLoading = sessionLoading || loading
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    // Only redirect if we're sure the user is unauthenticated
+    // Don't redirect while session is still loading
+    if (status === 'unauthenticated' && !sessionLoading) {
+      console.log('User unauthenticated, redirecting to login')
       router.push('/login')
     }
-  }, [status, router])
+  }, [status, sessionLoading, router])
 
   useEffect(() => {
     let mounted = true
