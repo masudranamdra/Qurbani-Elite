@@ -8,7 +8,6 @@ export function useAnimals() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate data fetching
     const timer = setTimeout(() => {
       setAnimals(animalsData)
       setLoading(false)

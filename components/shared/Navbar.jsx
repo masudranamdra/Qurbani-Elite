@@ -60,7 +60,6 @@ export default function Navbar() {
         )}
       >
         <div className="flex justify-between items-center">
-          {/* Logo Section */}
           <Link href="/" className="flex items-center gap-4 group">
             <motion.div 
               whileHover={{ rotate: 10, scale: 1.1 }}
@@ -78,7 +77,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-2">
             <div className="flex items-center gap-1 mr-4">
               {navLinks.map((link) => (
@@ -146,7 +144,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-4">
             <button onClick={toggleTheme} className="p-3 text-foreground/70">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -161,7 +158,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

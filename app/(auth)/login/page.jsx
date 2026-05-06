@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth-context'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -33,7 +32,6 @@ export default function LoginPage() {
     
     setLoading(true)
     try {
-      // Use NextAuth signIn with CredentialsProvider for secure validation
       const result = await signIn('credentials', {
         email,
         password,
@@ -42,12 +40,10 @@ export default function LoginPage() {
 
       if (result?.ok) {
         toast.success('Welcome back!')
-        // Wait for session to be established
         setTimeout(() => {
           router.push(redirect)
         }, 500)
       } else {
-        // Show specific error messages from the provider
         const errorMessage = result?.error || 'Invalid email or password.'
         toast.error(errorMessage)
       }
@@ -62,8 +58,6 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true)
     try {
-      // Use redirect: true to let NextAuth handle the redirect automatically
-      // This ensures the session is established before navigation
       await signIn('google', { 
         callbackUrl: '/my-profile',
         redirect: true

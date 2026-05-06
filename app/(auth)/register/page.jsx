@@ -23,8 +23,6 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    // Validation
     if (!formData.name || !formData.email || !formData.password) {
       toast.error('Please fill in all required fields.')
       return
@@ -37,12 +35,10 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      // Call registration API
       await register(formData.name, formData.email, formData.phone, formData.password)
       
       toast.success('Account created successfully! Logging you in...')
       
-      // Auto-login after registration
       const loginResult = await signIn('credentials', {
         email: formData.email,
         password: formData.password,

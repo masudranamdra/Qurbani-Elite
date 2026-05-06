@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
@@ -34,7 +34,6 @@ export default function AnimalDetailsPage() {
   const [bookingLoading, setBookingLoading] = useState(false)
   const [captchaAnswer, setCaptchaAnswer] = useState('')
   
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -56,16 +55,11 @@ export default function AnimalDetailsPage() {
 
   useEffect(() => {
     if (user) {
-      setTimeout(() => {
-        setFormData(prev => {
-          if (prev.name === user.name && prev.email === user.email) return prev
-          return {
-            ...prev,
-            name: user.name || '',
-            email: user.email || ''
-          }
-        })
-      }, 0)
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || ''
+      }))
     }
   }, [user])
 
@@ -86,44 +80,54 @@ export default function AnimalDetailsPage() {
     if (!animal) return
 
     setBookingLoading(true)
-    
-    // Create professional booking record
-    const newBooking = {
-      id: `BK-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      animalId: animal.id,
-      animalName: animal.name,
-      animalImage: animal.image,
-      animalPrice: animal.price,
-      ...formData,
-      status: 'Pending Verification',
-      date: new Date().toISOString()
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          animalId: animal.id,
+          animalName: animal.name,
+          animalImage: animal.image,
+          animalPrice: animal.price,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          preferredDate: formData.preferredDate,
+          additionalInfo: formData.additionalInfo,
+          paymentMethod: 'pay_later'
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Booking failed')
+      }
+
+      await response.json()
+
+      toast.success('Your professional booking request has been received!', {
+        duration: 5000,
+        icon: '✅'
+      })
+
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        phone: '',
+        address: '',
+        preferredDate: '',
+        additionalInfo: ''
+      })
+      setCaptchaAnswer('')
+      router.push('/my-profile')
+    } catch (error) {
+      console.error('Booking error:', error)
+      toast.error(error.message || 'Booking failed. Please try again.')
+    } finally {
+      setBookingLoading(false)
     }
-
-    // Persist to localStorage
-    const existingBookings = JSON.parse(localStorage.getItem('qurbani_bookings') || '[]')
-    localStorage.setItem('qurbani_bookings', JSON.stringify([newBooking, ...existingBookings]))
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    toast.success('Your professional booking request has been received!', {
-      duration: 5000,
-      icon: '🏛️'
-    })
-    
-    setFormData({
-      name: user.name || '',
-      email: user.email || '',
-      phone: '',
-      address: '',
-      preferredDate: '',
-      additionalInfo: ''
-    })
-    setCaptchaAnswer('')
-    setBookingLoading(false)
-    
-    // Redirect to profile to see the booking
-    router.push('/my-profile')
   }
 
 
@@ -155,7 +159,6 @@ export default function AnimalDetailsPage() {
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-16 items-start">
-        {/* Left: Premium Visuals & Attributes */}
         <div className="space-y-12">
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
@@ -223,7 +226,6 @@ export default function AnimalDetailsPage() {
           </motion.div>
         </div>
 
-        {/* Right: Pricing & Professional Booking Form */}
         <div className="space-y-8 sticky top-32">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -333,7 +335,6 @@ export default function AnimalDetailsPage() {
                   />
                 </div>
 
-                {/* Math Captcha Verification */}
                 <div className="p-6 bg-gradient-to-br from-sky-50 via-blue-50 to-green-50 dark:bg-slate-900/50 rounded-3xl border-2 border-dashed border-primary/20 space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-black text-primary uppercase tracking-widest">Verification Security</label>
@@ -389,4 +390,5 @@ export default function AnimalDetailsPage() {
     </div>
   )
 }
+
 

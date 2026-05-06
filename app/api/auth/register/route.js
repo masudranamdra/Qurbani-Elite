@@ -7,7 +7,6 @@ export async function POST(req) {
     const body = await req.json()
     const { name, email, phone, password } = body
 
-    // Validation
     if (!email || !password || !name) {
       return Response.json(
         { error: 'Missing required fields: name, email, password' },
@@ -22,10 +21,8 @@ export async function POST(req) {
       )
     }
 
-    // Connect to database
     await connectDB()
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() })
     if (existingUser) {
       return Response.json(
@@ -34,15 +31,14 @@ export async function POST(req) {
       )
     }
 
-    // Hash password
     const hashedPassword = await hashPassword(password)
 
-    // Create user in MongoDB with Mongoose
     const newUser = await User.create({
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
       phone: phone || '',
+      gmail: email.toLowerCase(),
       photoURL: `https://i.pravatar.cc/150?u=${email}`,
       provider: 'credentials'
     })
@@ -61,7 +57,6 @@ export async function POST(req) {
   } catch (error) {
     console.error('Registration error:', error)
     
-    // Handle validation errors
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message)
       return Response.json(

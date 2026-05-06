@@ -70,7 +70,6 @@ export default function AboutTraditionPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 space-y-24">
-      {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -88,7 +87,6 @@ export default function AboutTraditionPage() {
         </p>
       </motion.div>
 
-      {/* What is Qurbani */}
       <motion.section
         variants={containerVariants}
         initial="hidden"
@@ -122,7 +120,6 @@ export default function AboutTraditionPage() {
         </motion.div>
       </motion.section>
 
-      {/* Significance */}
       <section className="space-y-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -163,7 +160,6 @@ export default function AboutTraditionPage() {
         </motion.div>
       </section>
 
-      {/* How to Perform Qurbani */}
       <section className="bg-gradient-to-br from-sky-50 via-blue-100 to-green-100 py-24 -mx-6 px-6 rounded-3xl">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -202,7 +198,6 @@ export default function AboutTraditionPage() {
         </div>
       </section>
 
-      {/* Ethical Considerations */}
       <section className="space-y-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -278,7 +273,6 @@ export default function AboutTraditionPage() {
         </motion.div>
       </section>
 
-      {/* Call to Action */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

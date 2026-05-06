@@ -39,7 +39,6 @@ export default function HomePage() {
 
   return (
     <div className="space-y-32 pb-32">
-      {/* Hero Section - The Grand Entrance */}
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
@@ -104,7 +103,6 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-10" />
       </section>
 
-      {/* Featured Animals - The Elite Collection */}
       <section className="max-w-7xl mx-auto px-6">
         <motion.div 
           initial="hidden"
@@ -139,7 +137,6 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* The Quality Standards - Professional Showcase */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-primary/5 -skew-y-3 origin-left translate-y-12" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -202,7 +199,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust Stats - The Proof of Excellence */}
       <section className="max-w-7xl mx-auto px-6">
         <div className="bg-secondary rounded-3xl p-12 md:p-16 border border-white/10 relative overflow-hidden shadow-xl">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-3xl -mr-48 -mt-48 opacity-20" />
@@ -231,7 +227,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section - The Professional Invitation */}
       <section className="max-w-7xl mx-auto px-6">
         <div className="relative bg-white dark:bg-secondary rounded-3xl p-12 md:p-16 overflow-hidden text-center border border-border shadow-xl">
           <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
@@ -252,7 +247,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How to Buy Qurbani Animals */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -312,7 +306,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How to Sell Animals */}
       <section className="bg-gradient-to-br from-sky-50 via-blue-100 to-green-100 py-24">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
@@ -369,7 +362,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why Trust Us */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -434,7 +426,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Marketplace Benefits */}
       <section className="bg-gradient-to-br from-sky-50 via-blue-100 to-green-100 py-24">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div

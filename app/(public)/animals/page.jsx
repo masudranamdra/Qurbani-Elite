@@ -20,7 +20,6 @@ export default function AnimalsPage() {
   })
   const [showFilters, setShowFilters] = useState(false)
 
-  // Debounce search term
   const debounce = useCallback((func, delay) => {
     let timeoutId
     return (...args) => {
@@ -42,7 +41,6 @@ export default function AnimalsPage() {
   const filteredAndSortedAnimals = useMemo(() => {
     let result = [...animals]
 
-    // Search filter
     if (debouncedSearchTerm) {
       result = result.filter(a =>
         a.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
@@ -52,17 +50,14 @@ export default function AnimalsPage() {
       )
     }
 
-    // Category filter
     if (filters.category) {
       result = result.filter(a => a.category.toLowerCase() === filters.category.toLowerCase())
     }
 
-    // Location filter
     if (filters.location) {
       result = result.filter(a => a.location.toLowerCase().includes(filters.location.toLowerCase()))
     }
 
-    // Price range filter
     if (filters.minPrice) {
       result = result.filter(a => a.price >= parseInt(filters.minPrice))
     }
@@ -70,7 +65,6 @@ export default function AnimalsPage() {
       result = result.filter(a => a.price <= parseInt(filters.maxPrice))
     }
 
-    // Sort
     if (sortBy === 'price-asc') {
       result.sort((a, b) => a.price - b.price)
     } else if (sortBy === 'price-desc') {
@@ -111,7 +105,6 @@ export default function AnimalsPage() {
         </p>
       </motion.div>
 
-      {/* Professional Filters Bar */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,7 +149,6 @@ export default function AnimalsPage() {
           </div>
         </div>
 
-        {/* Advanced Filters */}
         <AnimatePresence>
           {showFilters && (
             <motion.div

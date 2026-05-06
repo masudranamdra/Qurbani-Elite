@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    gmail: {
+      type: String,
+      default: ''
+    },
     photoURL: {
       type: String,
       default: null

@@ -34,7 +34,6 @@ export default function Footer() {
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
     toast.success('Thank you for your feedback!')
     setFeedback({ name: '', message: '' })
@@ -52,7 +51,6 @@ export default function Footer() {
     <footer className="bg-secondary text-slate-400 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-          {/* Brand & About */}
           <div className="space-y-8">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-primary/20">
@@ -80,7 +78,6 @@ export default function Footer() {
           </div>
 
 
-          {/* Quick Links */}
           <div>
             <h3 className="text-white font-bold text-lg mb-8">Navigation</h3>
             <ul className="space-y-4 text-base">
@@ -95,7 +92,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h3 className="text-white font-bold text-lg mb-8">Support</h3>
             <ul className="space-y-4 text-base">
@@ -110,7 +106,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info & Feedback */}
           <div className="space-y-8">
             <div>
               <h3 className="text-white font-bold text-lg mb-8">Get in Touch</h3>
@@ -141,7 +136,6 @@ export default function Footer() {
         </div>
 
 
-        {/* Feedback Form */}
             <div className="mt-16 md:mt-20 lg:mt-24 bg-white/5 p-8 rounded-lg shadow-lg">
               <h3 className="text-white font-bold text-lg mb-6">Send Feedback</h3>
               <form onSubmit={handleFeedbackSubmit} className="space-y-4 md:flex gap-2">

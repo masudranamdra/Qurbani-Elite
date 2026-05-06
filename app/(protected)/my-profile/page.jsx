@@ -24,6 +24,7 @@ import {
   Home
 } from 'lucide-react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import LoadingSpinner from '@/components/shared/LoadingSpinner'
 import { formatPrice } from '@/lib/utils'
 
@@ -31,19 +32,81 @@ export default function MyProfilePage() {
   const { user, loading, logout } = useAuth()
   const router = useRouter()
   const [bookings, setBookings] = useState([])
+  const [ordersLoading, setOrdersLoading] = useState(true)
+  const [cancelingOrder, setCancelingOrder] = useState(null)
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login')
     }
-
-    if (typeof window !== 'undefined') {
-      const savedBookings = JSON.parse(localStorage.getItem('qurbani_bookings') || '[]')
-      setTimeout(() => {
-        setBookings(savedBookings)
-      }, 0)
-    }
   }, [user, loading, router])
+
+  useEffect(() => {
+    let mounted = true
+
+    async function loadOrders() {
+      if (!user) {
+        setBookings([])
+        setOrdersLoading(false)
+        return
+      }
+
+      setOrdersLoading(true)
+      try {
+        const response = await fetch('/api/bookings')
+        if (!response.ok) {
+          throw new Error('Unable to load bookings')
+        }
+
+        const data = await response.json()
+        if (mounted) {
+          setBookings(data.orders || [])
+        }
+      } catch (error) {
+        console.error('Bookings fetch error:', error)
+        if (mounted) {
+          setBookings([])
+        }
+      } finally {
+        if (mounted) {
+          setOrdersLoading(false)
+        }
+      }
+    }
+
+    if (!loading) {
+      loadOrders()
+    }
+
+    return () => {
+      mounted = false
+    }
+  }, [user, loading])
+
+  const handleCancel = async (bookingId) => {
+    setCancelingOrder(bookingId)
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: bookingId, action: 'cancel' })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Unable to cancel booking')
+      }
+
+      const data = await response.json()
+      setBookings((current) => current.map((item) => (item.id === bookingId ? data.order : item)))
+      toast.success('Booking cancelled successfully.')
+    } catch (error) {
+      console.error('Cancel booking error:', error)
+      toast.error(error.message || 'Cancellation failed')
+    } finally {
+      setCancelingOrder(null)
+    }
+  }
 
   if (loading || !user) {
     return (
@@ -61,8 +124,10 @@ export default function MyProfilePage() {
     { icon: Home, label: 'Mansion / Home', value: user.home || 'Not provided' },
   ]
 
+  const activeBookings = bookings.filter((booking) => booking.status !== 'Cancelled').length
+
   const stats = [
-    { label: 'Active Bookings', value: bookings.length.toString(), icon: Award, accent: 'bg-primary/10', color: 'text-primary' },
+    { label: 'Active Bookings', value: activeBookings.toString(), icon: Award, accent: 'bg-primary/10', color: 'text-primary' },
     { label: 'Saved Animals', value: '0', icon: Heart, accent: 'bg-rose-500/10', color: 'text-rose-500' },
     { label: 'Market Visits', value: '18', icon: Star, accent: 'bg-amber-500/10', color: 'text-amber-500' },
   ]
@@ -204,7 +269,9 @@ export default function MyProfilePage() {
 
                 <div className="space-y-6">
                   <AnimatePresence mode="popLayout">
-                    {bookings.length > 0 ? (
+                    {ordersLoading ? (
+                      <div className="rounded-[40px] border border-border/70 bg-slate-50 p-16 text-center text-muted-foreground">Loading booking history...</div>
+                    ) : bookings.length > 0 ? (
                       bookings.map((booking, index) => (
                         <motion.article
                           key={booking.id}
@@ -228,7 +295,7 @@ export default function MyProfilePage() {
                               <div>
                                 <div className="flex flex-wrap items-center gap-3">
                                   <h3 className="text-2xl font-black text-foreground">{booking.animalName}</h3>
-                                  <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">#{booking.id}</span>
+                                  <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">#{booking.orderNumber}</span>
                                 </div>
                                 <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
                                   <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{booking.address}</span>
@@ -241,9 +308,19 @@ export default function MyProfilePage() {
                               <span className="mt-3 inline-flex rounded-full bg-primary/10 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-primary font-black">{booking.status}</span>
                             </div>
                           </div>
-                          <div className="mt-6 flex flex-wrap gap-4 border-t border-border/60 pt-4 text-[11px] font-bold text-muted-foreground">
+                          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border/60 pt-4 text-[11px] font-bold text-muted-foreground">
                             <span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-500" />Vet Inspected</span>
                             <span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-500" />Transport Booked</span>
+                            {booking.status !== 'Cancelled' && (
+                              <button
+                                type="button"
+                                onClick={() => handleCancel(booking.id)}
+                                disabled={cancelingOrder === booking.id}
+                                className="inline-flex items-center gap-2 rounded-3xl bg-destructive/10 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-destructive font-black transition hover:bg-destructive/20 disabled:opacity-60"
+                              >
+                                {cancelingOrder === booking.id ? 'Cancelling' : 'Cancel Booking'}
+                              </button>
+                            )}
                           </div>
                         </motion.article>
                       ))

@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { 
-  User, 
-  Image as ImageIcon, 
-  Save, 
-  ArrowLeft, 
-  Camera, 
-  MapPin, 
-  Phone, 
-  AtSign, 
-  Home, 
+import {
+  User,
+  Image as ImageIcon,
+  Save,
+  ArrowLeft,
+  Camera,
+  MapPin,
+  Phone,
+  AtSign,
+  Home,
   Sparkles,
   Mail
 } from 'lucide-react'
@@ -37,20 +37,10 @@ const initialFormState = {
 export default function UpdateProfilePage() {
   const { user, loading: authLoading, updateProfile } = useAuth()
   const router = useRouter()
-  
-  const [formData, setFormData] = useState(() => ({
-    name: user?.name || '',
-    nickname: user?.nickname || '',
-    email: user?.email || '',
-    gmail: user?.gmail || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
-    home: user?.home || '',
-    photoURL: user?.photoURL || '',
-    coverURL: user?.coverURL || ''
-  }))
-  const [photoPreview, setPhotoPreview] = useState(user?.photoURL || '')
-  const [coverPreview, setCoverPreview] = useState(user?.coverURL || '')
+
+  const [formData, setFormData] = useState(initialFormState)
+  const [photoPreview, setPhotoPreview] = useState('')
+  const [coverPreview, setCoverPreview] = useState('')
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
@@ -58,6 +48,23 @@ export default function UpdateProfilePage() {
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login')
+      return
+    }
+
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        nickname: user.nickname || '',
+        email: user.email || '',
+        gmail: user.gmail || user.email || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        home: user.home || '',
+        photoURL: user.photoURL || '',
+        coverURL: user.coverURL || ''
+      })
+      setPhotoPreview(user.photoURL || '')
+      setCoverPreview(user.coverURL || '')
     }
   }, [user, authLoading, router])
 
@@ -65,7 +72,11 @@ export default function UpdateProfilePage() {
     const nextErrors = {}
     if (!formData.name.trim()) nextErrors.name = 'Name is required.'
     if (!formData.phone.trim()) nextErrors.phone = 'Phone number is required.'
-    if (!formData.gmail.trim()) nextErrors.gmail = 'Email is required.'
+    if (!formData.gmail.trim()) {
+      nextErrors.gmail = 'Email is required.'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.gmail)) {
+      nextErrors.gmail = 'Enter a valid email address.'
+    }
     if (!formData.photoURL.trim()) nextErrors.photoURL = 'Profile image is required.'
     if (!formData.coverURL.trim()) nextErrors.coverURL = 'Cover image is required.'
     return nextErrors
@@ -107,7 +118,8 @@ export default function UpdateProfilePage() {
         style: { borderRadius: '20px', fontWeight: 'bold' }
       })
       router.push('/my-profile')
-    } catch {
+    } catch (error) {
+      console.error('Profile update error:', error)
       toast.error('Failed to update credentials.')
     } finally {
       setLoading(false)
