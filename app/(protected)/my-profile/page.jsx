@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useAuth } from '@/lib/auth-context'
 import { useSession } from 'next-auth/react'
@@ -151,7 +151,7 @@ export default function MyProfilePage() {
         <section className="relative bg-slate-950/5 dark:bg-slate-950">
           <div className="relative h-150">
             <Image
-              src={'https://i.ibb.co.com/95v6dB3/leon-ephraim-Axo-Nnn-H1-Y98-unsplash.jpg'||user.coverURL}
+              src={user.coverURL || 'https://i.ibb.co/95v6dB3/leon-ephraim-Axo-Nnn-H1-Y98-unsplash.jpg'}
               alt="Cover image"
               fill
               className="object-cover"
@@ -183,7 +183,7 @@ export default function MyProfilePage() {
                   <p className="text-xs font-black uppercase tracking-[0.3em] text-emerald-300 mb-3">Qurbani Elite</p>
                   <h1 className="text-5xl font-black tracking-tight text-white">{user.name}</h1>
                   <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300/90">
-                    {user.nickname ? `Known as ${user.nickname} in elite marketplace circles — your verified profile brings trust, bookings, and premium livestock management together.` : 'Your verified profile brings trust, bookings, and premium livestock management together.'}
+                    {user.nickname ? `Known as ${user.nickname} in elite marketplace circles � your verified profile brings trust, bookings, and premium livestock management together.` : 'Your verified profile brings trust, bookings, and premium livestock management together.'}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-3">
                     <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.24em] border border-white/10 text-white">

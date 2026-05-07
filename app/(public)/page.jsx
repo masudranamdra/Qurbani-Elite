@@ -42,7 +42,7 @@ export default function HomePage() {
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://i.ibb.co.com/vn7tnPg/david-dolenc-1-AKu-Vm-Qx-Uk-U-unsplash.jpg"
+            src="https://i.ibb.co/vn7tnPg/david-dolenc-1-AKu-Vm-Qx-Uk-U-unsplash.jpg"
             className="w-full h-full mb:mt-10 object-cover scale-100"
             alt="Hero Background"
           />
@@ -179,7 +179,7 @@ export default function HomePage() {
                 <div className="space-y-6 pt-12">
                   <motion.img 
                     whileHover={{ scale: 1.02 }} 
-                    src="https://i.ibb.co.com/dwjFtC6q/virginia-long-dp5o5-ERk-Tqg-unsplash.jpg" 
+                    src="https://i.ibb.co/dwjFtC6q/virginia-long-dp5o5-ERk-Tqg-unsplash.jpg" 
                     className="rounded-2xl shadow-xl border border-white/10 object-cover aspect-[3/4] w-full transition-transform duration-300" 
                     alt="Premium Specimen 1" 
                   />
@@ -187,7 +187,7 @@ export default function HomePage() {
                 <div className="space-y-6">
                   <motion.img 
                     whileHover={{ scale: 1.02 }} 
-                    src="https://i.ibb.co.com/zVr8WfFk/mitchell-orr-Cmn-Xpswx8-QQ-unsplash.jpg" 
+                    src="https://i.ibb.co/zVr8WfFk/mitchell-orr-Cmn-Xpswx8-QQ-unsplash.jpg" 
                     className="rounded-2xl shadow-xl border border-white/10 object-cover aspect-[4/5] w-full transition-transform duration-300" 
                     alt="Premium Specimen 2" 
                   />
