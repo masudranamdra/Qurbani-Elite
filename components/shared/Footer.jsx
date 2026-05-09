@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { PawPrint, Mail, Phone, MapPin, Globe, Send } from 'lucide-react'
+import { PawPrint, Mail, Phone, MapPin, Globe, Send, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { motion } from 'framer-motion'
 
-// Custom Brand Icons since Lucide v1 removed them
+// Custom Brand Icons
 const FacebookIcon = (props) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -26,50 +27,81 @@ const InstagramIcon = (props) => (
   </svg>
 )
 
-
 export default function Footer() {
-  const [feedback, setFeedback] = useState({ name: '', message: '' })
+  const [feedback, setFeedback] = useState({ name: '', email: '', message: '' })
   const [loading, setLoading] = useState(false)
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    toast.success('Thank you for your feedback!')
-    setFeedback({ name: '', message: '' })
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    toast.success('Your message has been received. Thank you!', {
+      style: {
+        borderRadius: '12px',
+        background: '#059669',
+        color: '#fff',
+      },
+    })
+    setFeedback({ name: '', email: '', message: '' })
     setLoading(false)
   }
 
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'Animals', href: '/animals' },
+    { name: 'Traditional Roots', href: '/about' },
+    { name: 'Market Insight', href: '/market' },
+  ]
+
+  const supportLinks = [
+    { name: 'Help Center', href: '#' },
+    { name: 'Qurbani Guide', href: '#' },
+    { name: 'Terms of Service', href: '#' },
+    { name: 'Privacy Policy', href: '#' },
+  ]
+
   const socialLinks = [
-    { Icon: FacebookIcon, href: '#' },
-    { Icon: TwitterIcon, href: '#' },
-    { Icon: InstagramIcon, href: '#' },
-    { Icon: Globe, href: '#' },
+    { Icon: FacebookIcon, href: '#', label: 'Facebook' },
+    { Icon: TwitterIcon, href: '#', label: 'Twitter' },
+    { Icon: InstagramIcon, href: '#', label: 'Instagram' },
+    { Icon: Globe, href: '#', label: 'Website' },
   ]
 
   return (
-    <footer className="bg-secondary text-slate-400 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-          <div className="space-y-8">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-primary/20">
-                <PawPrint className="h-6 w-6 text-white" />
+    <footer className="relative mt-20 overflow-hidden border-t border-border bg-slate-50/50 pt-20 dark:bg-slate-950/50">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-1/4 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 h-64 w-64 translate-y-1/2 rounded-full bg-amber-500/5 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+          
+          {/* Brand Section */}
+          <div className="lg:col-span-4">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-primary text-white shadow-lg shadow-primary/20 transition-transform group-hover:rotate-12">
+                <PawPrint className="h-6 w-6" />
               </div>
-              <span className="text-2xl font-black text-white tracking-tight">
-                QurbaniMarket
-              </span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black tracking-tighter text-foreground leading-none">
+                  Qurbani<span className="text-primary">Elite</span>
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 leading-none mt-1">
+                  Sacred Tradition
+                </span>
+              </div>
             </Link>
-            <p className="text-base leading-relaxed text-slate-400">
-              We provide the healthiest and best-bred livestock for your sacred Qurbani.
-              Connecting farmers directly with buyers with transparency and trust since 2018.
+            <p className="mt-6 text-sm leading-7 text-muted-foreground max-w-sm">
+              Experience the convergence of ancient tradition and modern transparency. We provide verified, healthy livestock with premium logistics and care.
             </p>
-            <div className="flex gap-4">
+            <div className="mt-8 flex items-center gap-3">
               {socialLinks.map((social, i) => (
                 <a
                   key={i}
                   href={social.href}
-                  className="p-3 bg-white/5 rounded-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1 shadow-lg"
+                  aria-label={social.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-card border border-border text-muted-foreground transition-all hover:border-primary hover:text-primary hover:-translate-y-1 shadow-sm"
                 >
                   <social.Icon className="h-5 w-5" />
                 </a>
@@ -77,111 +109,132 @@ export default function Footer() {
             </div>
           </div>
 
-
-          <div>
-            <h3 className="text-white font-bold text-lg mb-8">Navigation</h3>
-            <ul className="space-y-4 text-base">
-              {['Home', 'Browse Animals', 'Verified Farms', 'Market Trends'].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="hover:text-primary transition-colors flex items-center gap-2 group">
-                    <div className="h-1 w-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-bold text-lg mb-8">Support</h3>
-            <ul className="space-y-4 text-base">
-              {['FAQs', 'Qurbani Tips', 'Terms & Conditions', 'Privacy Policy'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:text-primary transition-colors flex items-center gap-2 group">
-                    <div className="h-1 w-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="space-y-8">
+          {/* Navigation & Support */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:col-span-4">
             <div>
-              <h3 className="text-white font-bold text-lg mb-8">Get in Touch</h3>
-              <ul className="space-y-6 text-base">
-                <li className="flex items-start gap-4">
-                  <div className="p-2 bg-white/5 rounded-lg text-primary">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground mb-6">Navigation</h3>
+              <ul className="space-y-4">
+                {navLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground mb-6">Support</h3>
+              <ul className="space-y-4">
+                {supportLinks.map((link) => (
+                  <li key={link.name}>
+                    <a href={link.href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Contact & Feedback */}
+          <div className="lg:col-span-4 space-y-10">
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground mb-6">Contact Elite</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-4 group">
+                  <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card border border-border text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <MapPin className="h-5 w-5" />
                   </div>
-                  <span>Dinajpur, Chirirbandar,<br />6NO Basudebpur</span>
+                  <div className="text-sm leading-6">
+                    <p className="font-bold text-foreground">Headquarters</p>
+                    <p className="text-muted-foreground">Basudebpur, Chirirbandar, Dinajpur</p>
+                  </div>
                 </li>
-                <li className="flex items-center gap-4">
-                  <div className="p-2 bg-white/5 rounded-lg text-primary">
+                <li className="flex items-center gap-4 group">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card border border-border text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <Phone className="h-5 w-5" />
                   </div>
-                  <span>01877080660</span>
-                </li>
-                <li className="flex items-center gap-4">
-                  <div className="p-2 bg-white/5 rounded-lg text-primary">
-                    <Mail className="h-5 w-5" />
+                  <div className="text-sm">
+                    <p className="font-bold text-foreground">Concierge Line</p>
+                    <p className="text-muted-foreground">01877-080660</p>
                   </div>
-                  <a href="mailto:masud.dev01@gmail.com" className="hover:text-primary transition-colors">
-                    masud.dev01@gmail.com
-                  </a>
                 </li>
               </ul>
-            </div>     
+            </div>
           </div>
         </div>
 
-
-            <div className="mt-16 md:mt-20 lg:mt-24 bg-white/5 p-8 rounded-lg shadow-lg">
-              <h3 className="text-white font-bold text-lg mb-6">Send Feedback</h3>
-              <form onSubmit={handleFeedbackSubmit} className="space-y-4 md:flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors"
-                  value={feedback.name}
-                  onChange={(e) => setFeedback({...feedback, name: e.target.value})}
-                  required
-                />
-                <textarea
-                  placeholder="Your Message"
-                  rows="3"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors resize-none"
-                  value={feedback.message}
-                  onChange={(e) => setFeedback({...feedback, message: e.target.value})}
-                  required
-                />
+        {/* Feedback Form Section */}
+        <div className="mt-16 rounded-[32px] border border-border bg-card p-1 shadow-2xl shadow-slate-200/50 dark:shadow-none">
+          <div className="rounded-[30px] bg-slate-50 p-8 dark:bg-slate-900/50">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+              <div className="max-w-md">
+                <h3 className="text-xl font-black tracking-tight text-foreground">Send Your Feedback</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Your insights help us maintain the elite standards of our marketplace.</p>
+              </div>
+              <form onSubmit={handleFeedbackSubmit} className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={feedback.name}
+                    onChange={(e) => setFeedback({ ...feedback, name: e.target.value })}
+                    className="w-full rounded-2xl border-transparent bg-white px-5 py-3 text-sm font-semibold shadow-sm focus:border-primary focus:ring-1 focus:ring-primary dark:bg-slate-800"
+                  />
+                </div>
+                <div className="relative">
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={feedback.email}
+                    onChange={(e) => setFeedback({ ...feedback, email: e.target.value })}
+                    className="w-full rounded-2xl border-transparent bg-white px-5 py-3 text-sm font-semibold shadow-sm focus:border-primary focus:ring-1 focus:ring-primary dark:bg-slate-800"
+                    required
+                  />
+                </div>
+                <div className="relative lg:col-span-1">
+                  <input
+                    placeholder="Your Message"
+                    value={feedback.message}
+                    onChange={(e) => setFeedback({ ...feedback, message: e.target.value })}
+                    className="w-full rounded-2xl border-transparent bg-white px-5 py-3 text-sm font-semibold shadow-sm focus:border-primary focus:ring-1 focus:ring-primary dark:bg-slate-800"
+                    required
+                  />
+                </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-0 px-6 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-all flex items-center justify-center gap-2 disabled:opacity-70 hover:-translate-y-0.5"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20 transition hover:bg-primary-hover disabled:opacity-70 active:scale-95"
                 >
                   {loading ? (
-                    <div className="w-4 h-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
                       <Send className="h-4 w-4" />
-                      Send Feedback
+                      Submit
                     </>
                   )}
                 </button>
               </form>
             </div>
+          </div>
+        </div>
 
-        <div className="border-t border-white/5 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium">
-          <p>&copy; {new Date().getFullYear()} Qurbani Livestock Marketplace. All rights reserved.</p>
+        {/* Bottom Bar */}
+        <div className="mt-16 mb-10 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
+            &copy; {new Date().getFullYear()} Qurbani Elite Marketplace. All rights reserved.
+          </p>
           <div className="flex gap-8">
-            <a href="#" className="hover:text-white transition-colors">Cookies</a>
-            <a href="#" className="hover:text-white transition-colors">Security</a>
-            <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+            {['Cookies', 'Security', 'Sitemap'].map((item) => (
+              <a key={item} href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors hover:text-primary">
+                {item}
+              </a>
+            ))}
           </div>
         </div>
       </div>
     </footer>
   )
 }
-
