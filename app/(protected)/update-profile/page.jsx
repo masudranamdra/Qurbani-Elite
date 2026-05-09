@@ -70,15 +70,13 @@ export default function UpdateProfilePage() {
 
   const validateForm = () => {
     const nextErrors = {}
-    if (!formData.name.trim()) nextErrors.name = 'Name is required.'
-    if (!formData.phone.trim()) nextErrors.phone = 'Phone number is required.'
-    if (!formData.gmail.trim()) {
+    if (!formData.name?.trim()) nextErrors.name = 'Name is required.'
+    if (!formData.phone?.trim()) nextErrors.phone = 'Phone number is required.'
+    if (!formData.gmail?.trim()) {
       nextErrors.gmail = 'Email is required.'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.gmail)) {
       nextErrors.gmail = 'Enter a valid email address.'
     }
-    if (!formData.photoURL.trim()) nextErrors.photoURL = 'Profile image is required.'
-    if (!formData.coverURL.trim()) nextErrors.coverURL = 'Cover image is required.'
     return nextErrors
   }
 
@@ -260,7 +258,6 @@ export default function UpdateProfilePage() {
                     <div className="relative">
                       <ImageIcon className="pointer-events-none absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/40" />
                       <input
-                        required
                         type="url"
                         className={renderInputClass('photoURL')}
                         placeholder="Paste high-quality photo link"

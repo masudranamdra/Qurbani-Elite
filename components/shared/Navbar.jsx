@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/lib/auth-context'
 import { useState, useEffect } from 'react'
 import { Menu, X, LogOut, PawPrint, Moon, Sun, ShieldCheck } from 'lucide-react'
@@ -110,11 +111,12 @@ export default function Navbar() {
                         Verified
                       </span>
                     </div>
-                    <div className="w-12 h-12 rounded-[18px] p-0.5 border-2 border-primary/20 group-hover:border-primary transition-all shadow-xl shadow-primary/5 overflow-hidden">
-                      <img
+                    <div className="w-12 h-12 rounded-[18px] p-0.5 border-2 border-primary/20 group-hover:border-primary transition-all shadow-xl shadow-primary/5 overflow-hidden relative">
+                      <Image
                         src={user.photoURL || 'https://i.pravatar.cc/150?u=default'}
                         alt={user.name}
-                        className="w-full h-full object-cover rounded-[14px]"
+                        fill
+                        className="object-cover rounded-[14px]"
                       />
                     </div>
                   </Link>
@@ -185,8 +187,8 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-4 p-4 bg-primary/5 rounded-3xl"
                   >
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-primary/20">
-                       <img src={user.photoURL} className="w-full h-full object-cover" />
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-primary/20 relative">
+                       <Image src={user.photoURL} alt={user.name} fill className="object-cover" />
                     </div>
                     <div>
                       <p className="font-black text-foreground">{user.name}</p>

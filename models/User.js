@@ -33,6 +33,14 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: null
     },
+    image: {
+      type: String,
+      default: null
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false
+    },
     coverURL: {
       type: String,
       default: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?q=80&w=1200'
@@ -64,8 +72,18 @@ const UserSchema = new mongoose.Schema(
   }
 )
 
+// Sync photoURL and image fields
+UserSchema.pre('save', function(next) {
+  if (this.image && !this.photoURL) {
+    this.photoURL = this.image;
+  } else if (this.photoURL && !this.image) {
+    this.image = this.photoURL;
+  }
+  next();
+});
+
 // Index on email for fast lookups
 UserSchema.index({ email: 1 }, { unique: true })
 
 // Prevent model recompilation in development
-export default mongoose.models.User || mongoose.model('User', UserSchema)
+export default mongoose.models.User || mongoose.model('User', UserSchema, 'user')

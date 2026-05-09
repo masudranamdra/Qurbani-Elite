@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
@@ -20,6 +20,7 @@ import {
   Shield
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 
@@ -47,10 +48,8 @@ export default function AnimalDetailsPage() {
     if (animalsLoading) return
     
     const found = getAnimalById(id)
-    setTimeout(() => {
-      setAnimal(found || null)
-      setLoading(false)
-    }, 0)
+    setAnimal(found || null)
+    setLoading(false)
   }, [id, getAnimalById, animalsLoading])
 
   useEffect(() => {
@@ -100,12 +99,11 @@ export default function AnimalDetailsPage() {
         })
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Booking failed')
-      }
+      const result = await response.json()
 
-      await response.json()
+      if (!result.success) {
+        throw new Error(result.error || 'Booking failed')
+      }
 
       toast.success('Your professional booking request has been received!', {
         duration: 5000,
@@ -165,7 +163,12 @@ export default function AnimalDetailsPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="group relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-3xl ring-1 ring-black/5"
           >
-            <img src={animal.image} alt={animal.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Image 
+              src={animal.image} 
+              alt={animal.name} 
+              fill 
+              className="object-cover transition-transform duration-700 group-hover:scale-105" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
               <div className="glass p-4 rounded-2xl border-white/20">

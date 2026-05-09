@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, ShieldCheck, Truck, Award, Sparkles, Zap, Shield, Heart } from 'lucide-react'
 
@@ -41,9 +42,11 @@ export default function HomePage() {
     <div className="space-y-32 pb-32">
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <Image
             src="https://i.ibb.co/vn7tnPg/david-dolenc-1-AKu-Vm-Qx-Uk-U-unsplash.jpg"
-            className="w-full h-full mb:mt-10 object-cover scale-100"
+            fill
+            priority
+            className="object-cover"
             alt="Hero Background"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-secondary/90 via-secondary/70 to-background" />
@@ -177,20 +180,24 @@ export default function HomePage() {
               <div className="absolute -inset-10 bg-primary/10 rounded-full blur-3xl opacity-30" />
               <div className="grid grid-cols-2 gap-6 relative">
                 <div className="space-y-6 pt-12">
-                  <motion.img 
-                    whileHover={{ scale: 1.02 }} 
-                    src="https://i.ibb.co/dwjFtC6q/virginia-long-dp5o5-ERk-Tqg-unsplash.jpg" 
-                    className="rounded-2xl shadow-xl border border-white/10 object-cover aspect-[3/4] w-full transition-transform duration-300" 
-                    alt="Premium Specimen 1" 
-                  />
+                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl shadow-xl border border-white/10 transition-transform duration-300 hover:scale-105">
+                    <Image 
+                      src="https://i.ibb.co/dwjFtC6q/virginia-long-dp5o5-ERk-Tqg-unsplash.jpg" 
+                      fill
+                      className="object-cover" 
+                      alt="Premium Specimen 1" 
+                    />
+                  </div>
                 </div>
                 <div className="space-y-6">
-                  <motion.img 
-                    whileHover={{ scale: 1.02 }} 
-                    src="https://i.ibb.co/zVr8WfFk/mitchell-orr-Cmn-Xpswx8-QQ-unsplash.jpg" 
-                    className="rounded-2xl shadow-xl border border-white/10 object-cover aspect-[4/5] w-full transition-transform duration-300" 
-                    alt="Premium Specimen 2" 
-                  />
+                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-xl border border-white/10 transition-transform duration-300 hover:scale-105">
+                    <Image 
+                      src="https://i.ibb.co/zVr8WfFk/mitchell-orr-Cmn-Xpswx8-QQ-unsplash.jpg" 
+                      fill
+                      className="object-cover" 
+                      alt="Premium Specimen 2" 
+                    />
+                  </div>
                 </div>
               </div>
             </motion.div>

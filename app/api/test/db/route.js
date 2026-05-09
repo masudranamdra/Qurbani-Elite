@@ -4,16 +4,22 @@ export async function GET() {
   try {
     await connectDB()
     return Response.json({ 
-      message: 'MongoDB Connected Successfully',
-      status: 'connected'
+      success: true,
+      data: {
+        message: 'MongoDB Connected Successfully',
+        status: 'connected'
+      }
     })
   } catch (error) {
     console.error('Connection test failed:', error)
     return Response.json(
       { 
-        message: 'MongoDB Connection Failed',
+        success: false,
         error: error.message,
-        status: 'failed'
+        data: {
+          message: 'MongoDB Connection Failed',
+          status: 'failed'
+        }
       },
       { status: 500 }
     )

@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { signIn, signOut, useSession, SessionProvider } from 'next-auth/react'
+import { authClient } from '@/lib/auth-client'
 
 const AuthContext = createContext(undefined)
 
@@ -11,28 +11,38 @@ async function fetchProfile() {
     credentials: 'include'
   })
 
+  const text = await response.text()
+  
   if (!response.ok) {
-    const message = await response.text()
-    throw new Error(message || 'Unable to load user profile')
+    try {
+      const errorData = JSON.parse(text)
+      throw new Error(errorData.error || 'Unable to load user profile')
+    } catch (e) {
+      throw new Error(text || 'Unable to load user profile')
+    }
   }
-  return response.json()
+
+  try {
+    return JSON.parse(text)
+  } catch (e) {
+    throw new Error('Invalid JSON response from server')
+  }
 }
 
 function AuthProviderInner({ children }) {
+  const session = authClient.useSession()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { data: session, status } = useSession()
 
   useEffect(() => {
     let mounted = true
 
     async function loadProfile() {
-      if (status === 'loading') {
-        setLoading(true)
-        return
-      }
+      // 1. If session is still loading, wait
+      if (session?.isPending) return
 
-      if (!session?.user) {
+      // 2. If no session data, user is definitely logged out
+      if (!session?.data) {
         if (mounted) {
           setUser(null)
           setLoading(false)
@@ -40,15 +50,20 @@ function AuthProviderInner({ children }) {
         return
       }
 
+      // 3. Attempt to fetch extended profile from our API
       try {
         const profile = await fetchProfile()
-        if (mounted) {
-          setUser(profile.user)
+        if (mounted && profile.success) {
+          setUser(profile.data)
         }
       } catch (error) {
-        console.error('Failed to load profile:', error)
-        if (mounted) {
-          setUser(null)
+        // 4. Handle Unauthorized gracefully without console error spam
+        if (error.message.includes('Unauthorized')) {
+          if (mounted) {
+            setUser(null)
+          }
+        } else {
+          console.error('Profile Load Error:', error)
         }
       } finally {
         if (mounted) {
@@ -61,23 +76,24 @@ function AuthProviderInner({ children }) {
     return () => {
       mounted = false
     }
-  }, [session, status])
+  }, [session.data, session.isPending])
 
   const login = async (email, password) => {
     setLoading(true)
     try {
-      const result = await signIn('credentials', {
+      const result = await authClient.api.signInEmail({
         email,
-        password,
-        redirect: false
+        password
       })
 
-      if (!result?.ok) {
-        throw new Error(result?.error || 'Login failed')
+      if (!result?.user) {
+        throw new Error(result.error?.message || 'Login failed')
       }
 
       const profile = await fetchProfile()
-      setUser(profile.user)
+      if (profile.success) {
+        setUser(profile.data)
+      }
       return result
     } catch (error) {
       throw error
@@ -89,18 +105,18 @@ function AuthProviderInner({ children }) {
   const register = async (name, email, phone, password) => {
     setLoading(true)
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, password })
+      const result = await authClient.signUp.email({
+        email,
+        password,
+        name,
+        phone
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Registration failed')
+      if (result.error) {
+        throw new Error(result.error.message || 'Registration failed')
       }
 
-      return { ok: true }
+      return { ok: true, user: result.user }
     } catch (error) {
       throw error
     } finally {
@@ -111,10 +127,17 @@ function AuthProviderInner({ children }) {
   const loginWithGoogle = async (callbackUrl = `${window.location.origin}/my-profile`) => {
     setLoading(true)
     try {
-      await signIn('google', {
-        callbackUrl,
-        redirect: true
+      const response = await authClient.api.signInSocial({
+        provider: 'google',
+        callbackURL: callbackUrl,
+        disableRedirect: false
       })
+
+      if (response?.url) {
+        window.location.href = response.url
+      } else {
+        throw new Error('Google login failed')
+      }
     } catch (error) {
       console.error('Google login error:', error)
       throw error
@@ -126,7 +149,7 @@ function AuthProviderInner({ children }) {
   const logout = async () => {
     setLoading(true)
     try {
-      await signOut({ callbackUrl: '/' })
+      await authClient.signOut()
       setUser(null)
     } finally {
       setLoading(false)
@@ -149,8 +172,11 @@ function AuthProviderInner({ children }) {
       }
 
       const result = await response.json()
-      setUser(result.user)
-      return result.user
+      if (result.success) {
+        setUser(result.data)
+        return result.data
+      }
+      throw new Error(result.error || 'Update failed')
     } finally {
       setLoading(false)
     }
@@ -165,11 +191,9 @@ function AuthProviderInner({ children }) {
 
 export function AuthProvider({ children }) {
   return (
-    <SessionProvider>
-      <AuthProviderInner>
-        {children}
-      </AuthProviderInner>
-    </SessionProvider>
+    <AuthProviderInner>
+      {children}
+    </AuthProviderInner>
   )
 }
 

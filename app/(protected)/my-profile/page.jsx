@@ -1,24 +1,24 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
-import { useSession } from 'next-auth/react'
+import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { 
-  User, 
-  Mail, 
-  Shield, 
-  Edit3, 
-  LogOut, 
-  ArrowRight, 
-  Camera, 
-  Star, 
-  Award, 
-  Heart, 
-  Clock, 
-  MapPin, 
+import {
+  User,
+  Mail,
+  Shield,
+  Edit3,
+  LogOut,
+  ArrowRight,
+  Camera,
+  Star,
+  Award,
+  Heart,
+  Clock,
+  MapPin,
   Calendar,
   CheckCircle2,
   Phone,
@@ -31,22 +31,19 @@ import { formatPrice } from '@/lib/utils'
 
 export default function MyProfilePage() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const session = authClient.useSession()
   const { user, loading, logout } = useAuth()
   const [bookings, setBookings] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [cancelingOrder, setCancelingOrder] = useState(null)
-  const sessionLoading = status === 'loading'
-  const isLoading = sessionLoading || loading
+  const isLoading = loading
 
   useEffect(() => {
-    // Only redirect if we're sure the user is unauthenticated
-    // Don't redirect while session is still loading
-    if (status === 'unauthenticated' && !sessionLoading) {
+    if (session && !session.isPending && !session.data) {
       console.log('User unauthenticated, redirecting to login')
       router.push('/login')
     }
-  }, [status, sessionLoading, router])
+  }, [session, router])
 
   useEffect(() => {
     let mounted = true
@@ -65,9 +62,9 @@ export default function MyProfilePage() {
           throw new Error('Unable to load bookings')
         }
 
-        const data = await response.json()
-        if (mounted) {
-          setBookings(data.orders || [])
+        const result = await response.json()
+        if (mounted && result.success) {
+          setBookings(result.data || [])
         }
       } catch (error) {
         console.error('Bookings fetch error:', error)
@@ -99,14 +96,13 @@ export default function MyProfilePage() {
         body: JSON.stringify({ orderId: bookingId, action: 'cancel' })
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Unable to cancel booking')
+      const result = await response.json()
+      if (result.success) {
+        setBookings((current) => current.map((item) => (item.id === bookingId ? result.data : item)))
+        toast.success('Booking cancelled successfully.')
+      } else {
+        throw new Error(result.error || 'Unable to cancel booking')
       }
-
-      const data = await response.json()
-      setBookings((current) => current.map((item) => (item.id === bookingId ? data.order : item)))
-      toast.success('Booking cancelled successfully.')
     } catch (error) {
       console.error('Cancel booking error:', error)
       toast.error(error.message || 'Cancellation failed')
@@ -123,7 +119,7 @@ export default function MyProfilePage() {
     )
   }
 
-  const profile = user || session?.user || {}
+  const profile = user || session?.data?.user || {}
 
   const profileFields = [
     { icon: User, label: 'Legal Name', value: profile.name || 'Unknown' },
@@ -151,7 +147,7 @@ export default function MyProfilePage() {
         <section className="relative bg-slate-950/5 dark:bg-slate-950">
           <div className="relative h-150">
             <Image
-              src={user.coverURL || 'https://i.ibb.co/95v6dB3/leon-ephraim-Axo-Nnn-H1-Y98-unsplash.jpg'}
+              src={profile.coverURL || 'https://i.ibb.co/95v6dB3/leon-ephraim-Axo-Nnn-H1-Y98-unsplash.jpg'}
               alt="Cover image"
               fill
               className="object-cover"
@@ -166,8 +162,8 @@ export default function MyProfilePage() {
               <div className="flex items-center gap-6">
                 <div className="relative w-40 h-40 rounded-[32px] border-8 border-slate-950/90 overflow-hidden shadow-2xl bg-card">
                   <Image
-                    src={user.photoURL || 'https://i.pravatar.cc/150?u=default'}
-                    alt={user.name}
+                    src={profile.photoURL || profile.image || 'https://i.pravatar.cc/150?u=default'}
+                    alt={profile.name || "User profile"}
                     fill
                     className="object-cover"
                     unoptimized
@@ -181,9 +177,9 @@ export default function MyProfilePage() {
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.3em] text-emerald-300 mb-3">Qurbani Elite</p>
-                  <h1 className="text-5xl font-black tracking-tight text-white">{user.name}</h1>
+                  <h1 className="text-5xl font-black tracking-tight text-white">{profile.name || "Elite Member"}</h1>
                   <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300/90">
-                    {user.nickname ? `Known as ${user.nickname} in elite marketplace circles � your verified profile brings trust, bookings, and premium livestock management together.` : 'Your verified profile brings trust, bookings, and premium livestock management together.'}
+                    {profile.nickname ? `Known as ${profile.nickname} in elite marketplace circles — your verified profile brings trust, bookings, and premium livestock management together.` : 'Your verified profile brings trust, bookings, and premium livestock management together.'}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-3">
                     <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.24em] border border-white/10 text-white">

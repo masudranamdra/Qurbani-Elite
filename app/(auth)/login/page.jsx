@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { signIn, useSession } from 'next-auth/react'
+import { authClient } from '@/lib/auth-client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Mail, Lock, LogIn, PawPrint, ArrowLeft } from 'lucide-react'
@@ -11,17 +11,17 @@ import LoadingSpinner from '@/components/shared/LoadingSpinner'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const session = authClient.useSession()
   const [redirect, setRedirect] = useState('/my-profile')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (session?.data) {
       router.replace('/my-profile')
     }
-  }, [status, router])
+  }, [session, router])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -30,16 +30,8 @@ export default function LoginPage() {
     }, 0)
   }, [])
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-[90vh] flex items-center justify-center px-4 py-20">
-        <LoadingSpinner />
-      </div>
-    )
-  }
-
   // Don't render login form if user is authenticated
-  if (status === 'authenticated') {
+  if (session?.data) {
     return (
       <div className="min-h-[90vh] flex items-center justify-center px-4 py-20">
         <LoadingSpinner />
@@ -54,23 +46,21 @@ export default function LoginPage() {
       toast.error('Please enter email and password.')
       return
     }
-    
+
     setLoading(true)
     try {
-      const result = await signIn('credentials', {
+      const result = await authClient.api.signInEmail({
         email,
-        password,
-        redirect: false
+        password
       })
 
-      if (result?.ok) {
+      if (result?.user) {
         toast.success('Welcome back!')
         setTimeout(() => {
           router.push(redirect)
         }, 500)
       } else {
-        const errorMessage = result?.error || 'Invalid email or password.'
-        toast.error(errorMessage)
+        toast.error(result?.error?.message || 'Invalid email or password.')
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -83,14 +73,14 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true)
     try {
-      const callbackUrl = `${window.location.origin}/my-profile`
-      await signIn('google', {
-        callbackUrl,
-        redirect: true
+      await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: `${window.location.origin}/my-profile`
       })
     } catch (error) {
       console.error('Google login error:', error)
       toast.error('Google login failed. Please try again.')
+    } finally {
       setLoading(false)
     }
   }

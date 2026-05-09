@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { MapPin, Weight, Calendar, ChevronRight, Heart, Star, ShieldCheck } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
@@ -16,10 +17,11 @@ export default function AnimalCard({ animal, index = 0 }) {
     >
       <div className="relative aspect-[4/3] overflow-hidden m-3 rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent z-10 opacity-70 group-hover:opacity-40 transition duration-300" />
-        <img
+        <Image
           src={animal.image}
           alt={animal.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-20">
