@@ -166,7 +166,7 @@ export default function Footer() {
         </div>
 
         {/* Feedback Form Section */}
-        <div className="mt-16 rounded-[32px] border border-border bg-card p-1 shadow-2xl shadow-slate-200/50 dark:shadow-none">
+        <div className="mt-5 rounded-[32px] border border-border bg-card p-1 shadow-2xl shadow-slate-200/50 dark:shadow-none">
           <div className="rounded-[30px] bg-slate-50 p-8 dark:bg-slate-900/50">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="max-w-md">

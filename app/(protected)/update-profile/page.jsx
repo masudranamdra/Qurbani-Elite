@@ -169,7 +169,7 @@ export default function UpdateProfilePage() {
               <div className="relative overflow-hidden rounded-[36px] border border-border/70 bg-gradient-to-br from-sky-200 via-blue-100 to-green-200 p-6 shadow-xl shadow-slate-900/5">
                 <div className="relative mx-auto h-44 w-44 overflow-hidden rounded-[38px] border-8 border-white bg-slate-100 shadow-md ">
                   <Image
-                    src={photoPreview || formData.photoURL || 'https://i.pravatar.cc/150?u=default'}
+                    src={photoPreview || formData.photoURL || 'https://i.ibb.co.com/RkcC8ncY/coffeebeanworks-avatar-1968236-1920.png'}
                     alt="Profile preview"
                     fill
                     className="object-cover"
