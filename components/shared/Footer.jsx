@@ -85,7 +85,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-black tracking-tighter text-foreground leading-none">
-                  Qurbani<span className="text-primary">Elite</span>
+                  Qurbani<span className="text-primary">Hat</span>
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 leading-none mt-1">
                   Sacred Tradition

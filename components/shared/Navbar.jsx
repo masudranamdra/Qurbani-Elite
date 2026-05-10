@@ -70,7 +70,7 @@ export default function Navbar() {
             </motion.div>
             <div className="flex flex-col">
               <span className="text-2xl font-black tracking-tighter leading-none gradient-text">
-                Qurbani<span className="text-foreground dark:text-white">Elite</span>
+                Qurbani<span className="text-foreground dark:text-white">Hat</span>
               </span>
               <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 leading-none mt-1">
                 Sacred Tradition
